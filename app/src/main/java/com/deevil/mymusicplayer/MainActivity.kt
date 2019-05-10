@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import android.provider.MediaStore
+import androidx.core.net.toUri
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,9 +24,15 @@ class MainActivity : AppCompatActivity() {
             Log.w("TEST", it.artist)
         })
 
+
+
+        tracks.add(Track("aaa", "bbb",1, "/faaf.aaa".toUri(), 1))
+        tracks.add(Track("aaa", "bbb",1, "/faaf.aaa".toUri(), 1))
+        tracks.add(Track("aaa", "bbb",1, "/faaf.aaa".toUri(), 1))
+        tracks.add(Track("aaa", "bbb",1, "/faaf.aaa".toUri(), 1))
         //rvTrackList
 
-
+        ta.notifyDataSetChanged()
     }
 
 }

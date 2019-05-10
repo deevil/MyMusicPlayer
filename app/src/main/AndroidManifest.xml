@@ -13,16 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity
-                android:name=".Main5Activity"
-                android:label="@string/title_activity_main5"
-                android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-                android:name=".Main2Activity"
-                android:label="@string/title_activity_main2">
-        </activity>
-
+        
         <service
                 android:name=".PlayerService"
                 android:enabled="true"
