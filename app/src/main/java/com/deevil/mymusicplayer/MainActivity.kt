@@ -59,10 +59,11 @@ class MainActivity : AppCompatActivity() {
             Log.w("TEST", it.artist)
             Log.w("TEST", it.uri.toString())
 
-            //if (player.)
-
-            player.prepare(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(it.uri))
             player.playWhenReady = true
+            //if (player.)
+//
+//            player.prepare(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(it.uri))
+//            player.playWhenReady = true
         })
 
 
