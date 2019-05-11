@@ -44,13 +44,13 @@
                         android:gravity="center_vertical"/>
             </LinearLayout>
         </LinearLayout>
-        <ImageButton
+        <!--<ImageButton
                 android:id="@+id/btPlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" app:srcCompat="@drawable/exo_icon_play"
-                 android:layout_weight="0"
+                android:layout_weight="0"
                 android:layout_gravity="center_vertical" style="@android:style/Widget.Material.ImageButton"
                 android:backgroundTint="#3C9FEE" android:scaleType="centerCrop" android:elevation="@dimen/space16"/>
-
+-->
     </LinearLayout>
 </androidx.cardview.widget.CardView>
