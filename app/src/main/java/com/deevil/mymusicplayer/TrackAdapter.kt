@@ -1,6 +1,7 @@
 package com.deevil.mymusicplayer
 
 import android.content.Context
+import android.icu.util.TimeUnit
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,7 @@ class TrackAdapter(var tracks: ArrayList<Track>, val context: Context, val click
         fun bind(track: Track, position:Int, clickListener: (Track) -> Unit) {
             itemView.tvTrackName.text = track.title
             itemView.tvArtist.text = track.artist
-            itemView.tvDuration.text = track.duration.toString()
+            itemView.tvDuration.text = String.format("%02d:%02d", track.duration/ 1000 / 60 , track.duration / 1000 % 60)
             itemView.setOnClickListener{ clickListener(track) }
         }
     }
