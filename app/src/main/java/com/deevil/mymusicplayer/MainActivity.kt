@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 9999 && resultCode == RESULT_OK && data != null && data.data != null) {
             Log.i(TAG, "Result URI " + data.data)
 
+            if (data.data != null) return
 
             val treeUri: Uri = data.data
             val lst = getAllAudioFromTree(treeUri)
