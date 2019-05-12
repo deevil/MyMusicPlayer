@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_gravity="bottom"
               android:layoutDirection="ltr"
               android:background="#CC000000"
@@ -65,24 +65,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="4dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:orientation="horizontal"
-            android:background="#CC000FF0">
+            android:background="@color/white"
+    >
 
         <ImageButton android:id="@id/exo_prev"
-                     style="@style/ExoMediaButton.Previous"/>
+                     style="@style/ExoMediaButton.Previous"
+                     android:src="@drawable/ic_prev"/>
 
 
-        <ImageButton android:id="@id/exo_play"
-                     style="@style/ExoMediaButton.Play"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@id/exo_play"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ExoMediaButton.Play"
+                android:layout_gravity="center"
+        />
 
-        <ImageButton android:id="@id/exo_pause"
-                     style="@style/ExoMediaButton.Pause"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@id/exo_pause"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ExoMediaButton.Pause"
+                android:layout_gravity="center"
+        />
+
 
 
         <ImageButton android:id="@id/exo_next"
                      style="@style/ExoMediaButton.Next"
                      android:adjustViewBounds="false"
+                     android:src="@drawable/ic_next"
         />
 
 
@@ -98,6 +121,8 @@
 
 
         <ImageButton android:id="@id/exo_shuffle"
+                     android:layout_width="15dp"
+                     android:layout_height="15dp"
                      style="@style/ExoMediaButton.Shuffle"/>
 
         <ImageButton android:id="@id/exo_repeat_toggle"

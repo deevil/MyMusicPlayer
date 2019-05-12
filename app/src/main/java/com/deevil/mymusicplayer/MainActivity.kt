@@ -17,17 +17,28 @@ import androidx.core.content.ContextCompat
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.player_control.*
+import kotlinx.android.synthetic.main.player_view.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,13 +57,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         trackSelector = DefaultTrackSelector()
+        //var pc:PlayerControlView
+
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+        //player.debug
         dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
 
+
+        pc.player = player
         pcv.player = player
         pcv.controllerHideOnTouch = false
 
 
+        player.addAnalyticsListener(EventLogger(trackSelector))
         button.setOnClickListener {
 
             if (ContextCompat.checkSelfPermission(
@@ -71,6 +88,34 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+
+
+//        exo_play.setOnClickListener{
+//            Log.w(TAG, "sadfasf")
+//            it.hasOnClickListeners()
+//        }
+        //player.addListener{};
+        player.addListener(object : Player.EventListener {
+            override fun onLoadingChanged(isLoading:Boolean){
+                if (!isLoading) {
+                    Log.w(TAG, "aaaa")
+                }
+
+            }
+            override fun onPlayerStateChanged(playWhenReady: Boolean,playbackState: Int) {
+
+            }
+
+            override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+                //super.onTracksChanged(trackGroups, trackSelections)
+
+            }
+
+//            override fun onMetadata(metadata:Metadata ){
+//
+//            }
+        })
+        player.addMetadataOutput {  }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
