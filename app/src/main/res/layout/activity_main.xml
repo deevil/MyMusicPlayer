@@ -9,30 +9,29 @@
         tools:context=".MainActivity" android:orientation="vertical">
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/pcv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cl_top"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:use_artwork="true"
+            app:show_timeout="0"
+            app:player_layout_id="@layout/player_view"
+            app:controller_layout_id="@layout/player_control"
+            app:repeat_toggle_modes="all"
+            app:show_shuffle_button="true"
+    />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTrackList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_weight="0"
+    <Button android:id="@+id/button"
+            android:text="Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
-    >
-
-        <Button
-                android:text="Button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/button"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_weight="0"
+    />
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </LinearLayout>
