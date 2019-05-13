@@ -23,7 +23,7 @@ class SquareImageView : ImageView {
     }
 
     override fun setImageDrawable(drawable: Drawable) {
-        val radius = 0.03f
+        val radius = 0.05f
         val bitmap = (drawable as BitmapDrawable).bitmap
         val rid = RoundedBitmapDrawableFactory.create(resources, bitmap)
         rid.cornerRadius = bitmap.width * radius

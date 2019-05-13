@@ -17,75 +17,35 @@
             app:use_artwork="true"
             app:show_timeout="0"
             app:player_layout_id="@layout/player_view"
-            app:controller_layout_id="@layout/player_control"
             app:repeat_toggle_modes="all"
             app:show_shuffle_button="true"
-            app:use_controller="false"
+            app:controller_layout_id="@layout/player_control"
+            app:use_controller="true"
+
+
     />
 
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:gravity="center"
-    >
 
+<!--
 
-
-        <ImageButton
-                android:id="@id/exo_shuffle"
-                android:src="@drawable/ic_prev"
-                style="@style/ExoMediaButton.Shuffle"
-        />
-
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-        >
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Title"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="24sp"
-                    android:textColor="#222222"
-                    android:gravity="center"
-                    android:layout_margin="2dp"
-            />
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Artist"
-                    android:fontFamily="sans-serif-medium"
-                    android:id="@+id/appCompatTextView"
-                    android:textSize="16sp" android:textColor="#528BCC"
-                    android:gravity="center"
-                    android:layout_margin="2dp"
-            />
-
-        </LinearLayout>
-        <ImageButton
-                android:src="@drawable/ic_next"
-                android:id="@id/exo_repeat_toggle"
-                style="@style/ExoMediaButton"/>
-
-    </LinearLayout>
     <com.google.android.exoplayer2.ui.PlayerControlView
+            android:background="@color/colorPrimaryDark"
             android:id="@+id/pc"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+
+            android:layout_gravity="bottom"
+            android:foregroundGravity="bottom"
+
             app:use_artwork="true"
             app:show_timeout="0"
             app:controller_layout_id="@layout/player_control"
             app:repeat_toggle_modes="all"
             app:show_shuffle_button="true"
     />
+-->
 
     <Button android:id="@+id/button"
             android:text="Button"
@@ -94,6 +54,7 @@
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
             android:layout_weight="0"
+            android:background="@color/colorPrimaryDark"
     />
     <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </LinearLayout>

@@ -18,15 +18,19 @@ import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.metadata.Metadata
+import com.google.android.exoplayer2.metadata.id3.ApicFrame
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
@@ -39,6 +43,38 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.player_control.*
 import kotlinx.android.synthetic.main.player_view.*
+import com.deevil.mymusicplayer.CompListener as CompListener1
+
+/*
+if (useArtwork)
+{
+    for (i in 0 until selections.length) {
+        val selection = selections.get(i)
+        if (selection != null) {
+            for (j in 0 until selection!!.length()) {
+                val metadata = selection!!.getFormat(j).metadata
+                if (metadata != null && setArtworkFromMetadata(metadata!!)) {
+                    return
+                }
+            }
+        }
+    }
+    if (setDrawableArtwork(defaultArtwork)) {
+        return
+    }
+}*/
+//
+//private fun setArtworkFromMetadata(metadata: Metadata): Boolean {
+//    for (i in 0 until metadata.length()) {
+//        val metadataEntry = metadata.get(i)
+//        if (metadataEntry is ApicFrame) {
+//            val bitmapData = metadataEntry.pictureData
+//            val bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.size)
+//            return setDrawableArtwork(BitmapDrawable(getResources(), bitmap))
+//        }
+//    }
+//    return false
+//}
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,7 +83,7 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "DBG"
 
 
-    lateinit var player: SimpleExoPlayer
+    lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
     lateinit var trackSelector:DefaultTrackSelector
 
@@ -64,12 +100,16 @@ class MainActivity : AppCompatActivity() {
         dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
 
 
-        pc.player = player
+        //pc.player = player
         pcv.player = player
         pcv.controllerHideOnTouch = false
+        var componentListener = com.deevil.mymusicplayer.CompListener()
+        player.addListener(componentListener )
 
+        //player.addListener()
+        //.addAnalyticsListener(EventLogger(trackSelector))
+        //player.liste(Player.onT)onTracksChanged
 
-        player.addAnalyticsListener(EventLogger(trackSelector))
         button.setOnClickListener {
 
             if (ContextCompat.checkSelfPermission(
@@ -107,7 +147,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
-                //super.onTracksChanged(trackGroups, trackSelections)
+                for (i in 0 until (trackSelections?.length ?: 0)) {
+                    val selection = trackSelections?.get(i)
+                    if (selection != null) {
+                        for (j in 0 until selection!!.length()) {
+                            val metadata: Metadata? = selection!!.getFormat(j).metadata
+                            if (metadata != null) {
+                                metadata. .(MediaMetadataRetriever.METADATA_KEY_ARTIST)
+                                return
+                            }
+                        }
+                    }
+                }
 
             }
 
@@ -115,7 +166,7 @@ class MainActivity : AppCompatActivity() {
 //
 //            }
         })
-        player.addMetadataOutput {  }
+        //player.addMetadataOutput {  }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -124,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 9999 && resultCode == RESULT_OK && data != null && data.data != null) {
             Log.i(TAG, "Result URI " + data.data)
 
-            if (data.data != null) return
+            //if (data.data != null) return
 
             val treeUri: Uri = data.data
             val lst = getAllAudioFromTree(treeUri)

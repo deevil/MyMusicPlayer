@@ -8,4 +8,6 @@
     <string name="title_activity_main5">Main5Activity</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
+    <string name="text_font_1">sans-serif-medium</string>
+    <string name="text_font_2">sans-serif</string>
 </resources>

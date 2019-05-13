@@ -5,63 +5,34 @@
               android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPink"
             android:paddingTop="0dp"
 
-            android:gravity="center"
+
     >
 
 
-
         <ImageButton
-                android:id="@id/exo_shuffle"
-
+                android:layout_alignParentStart="true"
                 android:src="@drawable/ic_prev"
-                style="@style/ExoMediaButton.Shuffle"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
         />
 
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorButtonGrey"
-                android:layout_weight="1"
-
-        >
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Title"
-                    android:fontFamily="sans-serif-medium"
-                    android:textSize="24sp"
-                    android:textColor="#222222"
-                    android:gravity="center"
-                    android:layout_margin="2dp"
-            />
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Artist"
-                    android:fontFamily="sans-serif-medium"
-                    android:id="@+id/appCompatTextView"
-                    android:textSize="16sp"
-                    android:textColor="#528BCC"
-                    android:gravity="center"
-                    android:layout_margin="2dp"
-            />
-
-        </LinearLayout>
         <ImageButton
                 android:src="@drawable/ic_next"
-                android:id="@id/exo_repeat_toggle"
-                style="@style/ExoMediaButton"/>
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:layout_alignParentEnd="true"
 
-    </LinearLayout>
+        />
+
+    </RelativeLayout>
 
 
 </LinearLayout>
