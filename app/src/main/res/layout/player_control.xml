@@ -33,8 +33,10 @@
                 android:layout_weight="1"
         >
             <TextView
+                    android:id="@+id/Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxHeight="30dp"
                     android:text="Title"
                     android:fontFamily="sans-serif-medium"
                     android:textSize="24sp"
@@ -43,11 +45,11 @@
                     android:layout_margin="2dp"
             />
             <TextView
+                    android:id="@+id/Artist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Artist"
                     android:fontFamily="@string/text_font_2"
-                    android:id="@+id/appCompatTextView"
                     android:textSize="16sp"
                     android:textColor="@color/text_color_1"
                     android:gravity="center"
@@ -56,6 +58,7 @@
 
         </LinearLayout>
         <ImageButton
+                android:id="@+id/btn_settings"
                 android:src="@drawable/ic_settings"
                 style="@style/ExoMediaButton.Previous"
         />
@@ -73,7 +76,7 @@
                 android:id="@id/exo_progress"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="26dp"
+                android:layout_height="20dp"
                 app:scrubber_color="@color/colorAccent"
                 app:played_color="@color/colorAccent"
                 app:buffered_color="#999999"
@@ -175,74 +178,32 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+
             android:orientation="horizontal"
-            android:background="@color/colorPink"
     >
-
-
         <ImageButton
-                android:layout_marginLeft="10dp"
-                android:layout_margin="3dp"
-                android:id="@id/exo_shuffle"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_shuffle_2"
-                android:layout_gravity="start"
-                style="@style/ExoMediaButton.Shuffle"
+
+                android:id="@+id/btn_shuffle"
                 android:layout_alignParentStart="true"
-
+                android:src="@drawable/ic_shuffle"
+                android:background="@android:color/transparent"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
         />
-
 
         <ImageButton
 
-                android:id="@id/exo_repeat_toggle"
-                style="@style/ExoMediaButton.Shuffle"
-                android:layout_gravity="end"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                tools:src="@drawable/ic_repeat_2"
-                android:background="@color/colorPink"
-                android:elevation="@dimen/space8"
+                android:id="@+id/btn_repeat"
                 android:layout_alignParentEnd="true"
-
+                android:src="@drawable/ic_repeat"
+                android:background="@android:color/transparent"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
         />
 
-
-
-       <!-- <TextView android:id="@id/exo_position"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textStyle="bold"
-                  android:paddingLeft="4dp"
-                  android:paddingRight="4dp"
-                  android:includeFontPadding="false"
-                  android:layout_gravity="start"
-                  android:layout_weight="1"
-                  android:fontFamily="@string/text_font_2"
-                  android:textSize="@dimen/text_size_mini"
-                  android:textColor="@color/text_color_1"
-
-        />
-
-
-        <TextView android:id="@id/exo_duration"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textStyle="bold"
-                  android:paddingLeft="4dp"
-                  android:paddingRight="4dp"
-                  android:includeFontPadding="false"
-                  android:layout_gravity="end"
-                  android:layout_weight="1"
-                  android:gravity="end"
-                  android:fontFamily="@string/text_font_2"
-                  android:textSize="@dimen/text_size_mini"
-                  android:textColor="@color/text_color_3"
-
-        />-->
 
     </RelativeLayout>
 

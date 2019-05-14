@@ -17,7 +17,6 @@
             app:use_artwork="true"
             app:show_timeout="0"
             app:player_layout_id="@layout/player_view"
-            app:repeat_toggle_modes="all"
             app:show_shuffle_button="true"
             app:controller_layout_id="@layout/player_control"
             app:use_controller="true"
@@ -55,6 +54,7 @@
             android:layout_marginBottom="0dp"
             android:layout_weight="0"
             android:background="@color/colorPrimaryDark"
+            android:visibility="gone"
     />
     <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </LinearLayout>

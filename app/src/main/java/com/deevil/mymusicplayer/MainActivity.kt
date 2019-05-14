@@ -1,13 +1,12 @@
 package com.deevil.mymusicplayer
 
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.player_control.*
 import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -17,64 +16,20 @@ import androidx.core.content.ContextCompat
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.media.MediaMetadataRetriever
 import android.os.Build
+import android.widget.Toast.makeText
 import androidx.annotation.RequiresApi
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.metadata.Metadata
-import com.google.android.exoplayer2.metadata.id3.ApicFrame
+import com.google.android.exoplayer2.metadata.id3.Id3Frame
+import com.google.android.exoplayer2.metadata.id3.TextInformationFrame
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.player_control.*
-import kotlinx.android.synthetic.main.player_view.*
-import com.deevil.mymusicplayer.CompListener as CompListener1
-
-/*
-if (useArtwork)
-{
-    for (i in 0 until selections.length) {
-        val selection = selections.get(i)
-        if (selection != null) {
-            for (j in 0 until selection!!.length()) {
-                val metadata = selection!!.getFormat(j).metadata
-                if (metadata != null && setArtworkFromMetadata(metadata!!)) {
-                    return
-                }
-            }
-        }
-    }
-    if (setDrawableArtwork(defaultArtwork)) {
-        return
-    }
-}*/
-//
-//private fun setArtworkFromMetadata(metadata: Metadata): Boolean {
-//    for (i in 0 until metadata.length()) {
-//        val metadataEntry = metadata.get(i)
-//        if (metadataEntry is ApicFrame) {
-//            val bitmapData = metadataEntry.pictureData
-//            val bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.size)
-//            return setDrawableArtwork(BitmapDrawable(getResources(), bitmap))
-//        }
-//    }
-//    return false
-//}
 
 
 class MainActivity : AppCompatActivity() {
@@ -85,10 +40,12 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
-    lateinit var trackSelector:DefaultTrackSelector
+    lateinit var trackSelector: DefaultTrackSelector
 
 
+    @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.w(TAG, "onCreate")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -103,14 +60,8 @@ class MainActivity : AppCompatActivity() {
         //pc.player = player
         pcv.player = player
         pcv.controllerHideOnTouch = false
-        var componentListener = com.deevil.mymusicplayer.CompListener()
-        player.addListener(componentListener )
 
-        //player.addListener()
-        //.addAnalyticsListener(EventLogger(trackSelector))
-        //player.liste(Player.onT)onTracksChanged
-
-        button.setOnClickListener {
+        btn_settings.setOnClickListener {
 
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -128,45 +79,67 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        pcv.setOnTouchListener(object : SwipeListener(this){
+
+            override fun onSwipeTop() {
+                Log.w(TAG, "onSwipeTop")
+            }
+
+            override fun onSwipeRight() {
+                Log.w(TAG, "onSwipeRight")
+                if (player.hasPrevious()) player.previous()
+            }
+
+            override fun onSwipeLeft() {
+                Log.w(TAG, "onSwipeLeft")
+                if (player.hasNext()) player.next()
+            }
+
+            override fun onSwipeBottom() {
+                Log.w(TAG, "onSwipeBottom")
+               // hom()
+            }
+
+        })
 
 
-//        exo_play.setOnClickListener{
-//            Log.w(TAG, "sadfasf")
-//            it.hasOnClickListeners()
-//        }
-        //player.addListener{};
+        btn_repeat.setOnClickListener {
+            btn_repeat.isSelected = !btn_repeat.isSelected
+            player.repeatMode = if (btn_repeat.isSelected) 2 else 0
+
+        }
+
+        btn_shuffle.setOnClickListener {
+            btn_shuffle.isSelected = !btn_shuffle.isSelected
+            player.shuffleModeEnabled = btn_shuffle.isSelected
+
+        }
         player.addListener(object : Player.EventListener {
-            override fun onLoadingChanged(isLoading:Boolean){
+            override fun onLoadingChanged(isLoading: Boolean) {
                 if (!isLoading) {
                     Log.w(TAG, "aaaa")
                 }
-
-            }
-            override fun onPlayerStateChanged(playWhenReady: Boolean,playbackState: Int) {
-
             }
 
             override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
                 for (i in 0 until (trackSelections?.length ?: 0)) {
                     val selection = trackSelections?.get(i)
-                    if (selection != null) {
-                        for (j in 0 until selection!!.length()) {
-                            val metadata: Metadata? = selection!!.getFormat(j).metadata
-                            if (metadata != null) {
-                                metadata. .(MediaMetadataRetriever.METADATA_KEY_ARTIST)
-                                return
+                    for (j in 0 until (selection?.length() ?: 0)) {
+                        val metadata: Metadata? = selection?.getFormat(j)?.metadata
+                        for (z in 0 until (metadata?.length() ?: 0)) {
+                            val metadataEntry = metadata?.get(z)
+                            if (metadataEntry is Id3Frame) {
+                                when (metadataEntry.id) {
+                                    "TPE1" -> Artist.text = (metadataEntry as TextInformationFrame).value
+                                    "TIT2" -> Title.text = (metadataEntry as TextInformationFrame).value
+                                }
                             }
                         }
                     }
                 }
-
             }
-
-//            override fun onMetadata(metadata:Metadata ){
-//
-//            }
         })
-        //player.addMetadataOutput {  }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -183,7 +156,11 @@ class MainActivity : AppCompatActivity() {
 
                 var concatenatedSource = ConcatenatingMediaSource()
                 for (i in lst) {
-                    concatenatedSource.addMediaSource(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(i))
+                    concatenatedSource.addMediaSource(
+                        ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
+                            i
+                        )
+                    )
                 }
 
                 player.prepare(concatenatedSource)
@@ -265,4 +242,33 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onStart() {
+        Log.w(TAG, "onStart")
+        super.onStart()
+    }
+    override fun onStop() {
+        Log.w(TAG, "onStop")
+        super.onStop()
+    }
+
+    override fun onRestart() {
+        Log.w(TAG, "onRestart")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Log.w(TAG, "onResume")
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        Log.w(TAG, "onDestroy")
+        super.onDestroy()
+    }
+
+    override fun onPause() {
+        Log.w(TAG, "onPause")
+        super.onPause()
+
+    }
 }
