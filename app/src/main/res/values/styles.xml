@@ -24,7 +24,7 @@
 
 
     <style name="ExoMediaButton.Next">
-        <item name="android:src">@drawable/ic_skip_next_48</item>
+        <item name="android:src">@drawable/ic_next</item>
         <item name="android:contentDescription">@string/exo_controls_next_description</item>
     </style>
 

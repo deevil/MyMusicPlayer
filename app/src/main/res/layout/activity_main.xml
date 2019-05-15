@@ -25,27 +25,6 @@
     />
 
 
-
-<!--
-
-    <com.google.android.exoplayer2.ui.PlayerControlView
-            android:background="@color/colorPrimaryDark"
-            android:id="@+id/pc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-
-            android:layout_gravity="bottom"
-            android:foregroundGravity="bottom"
-
-            app:use_artwork="true"
-            app:show_timeout="0"
-            app:controller_layout_id="@layout/player_control"
-            app:repeat_toggle_modes="all"
-            app:show_shuffle_button="true"
-    />
--->
-
     <Button android:id="@+id/button"
             android:text="Button"
             android:layout_width="match_parent"

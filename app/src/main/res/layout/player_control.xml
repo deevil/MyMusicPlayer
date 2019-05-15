@@ -21,7 +21,8 @@
 
 
         <ImageButton
-                android:src="@drawable/ic_prev"
+                android:id="@+id/btn_add"
+                android:src="@drawable/ic_add"
                 style="@style/ExoMediaButton.Previous"
         />
 
