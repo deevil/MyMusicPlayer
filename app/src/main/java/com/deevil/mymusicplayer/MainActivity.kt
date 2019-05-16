@@ -16,9 +16,10 @@ import androidx.core.content.ContextCompat
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.google.android.exoplayer2.*
+import android.view.View
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.metadata.Metadata
 import com.google.android.exoplayer2.metadata.id3.Id3Frame
 import com.google.android.exoplayer2.metadata.id3.TextInformationFrame
@@ -28,6 +29,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import kotlinx.android.synthetic.main.select.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        chengeView(true)
         // INIT PLAYER
         player = ExoPlayerFactory.newSimpleInstance(this)
         dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
@@ -86,6 +89,8 @@ class MainActivity : AppCompatActivity() {
         // BUTTON CLICKS
         btn_settings.setOnClickListener {selectDir()}
         btn_add.setOnClickListener {selectDir()}
+        btn_select.setOnClickListener {selectDir()}
+
         btn_repeat.setOnClickListener {
             btn_repeat.isSelected = !btn_repeat.isSelected
             player.repeatMode = if (btn_repeat.isSelected) 2 else 0
@@ -122,6 +127,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+
+
 
     }
 
@@ -162,6 +169,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 player.prepare(concatenatedSource)
+                chengeView(false)
             } else {
                 Toast.makeText(this, "В выбранной директории нет аудио файлов", Toast.LENGTH_LONG).show()
             }
@@ -262,5 +270,15 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onPause")
         super.onPause()
 
+    }
+
+    fun chengeView(select_view : Boolean = true) {
+        if (select_view) {
+            pcv.visibility = View.GONE
+            sel_lay.visibility = View.VISIBLE
+        } else {
+            pcv.visibility = View.VISIBLE
+            sel_lay.visibility = View.GONE
+        }
     }
 }

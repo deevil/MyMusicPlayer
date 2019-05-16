@@ -25,15 +25,15 @@
     />
 
 
-    <Button android:id="@+id/button"
-            android:text="Button"
+    <include
+            android:id="@+id/sel_lay"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="0dp"
-            android:layout_weight="0"
-            android:background="@color/colorPrimaryDark"
+            android:layout_height="match_parent"
+            layout="@layout/select"
             android:visibility="gone"
     />
-    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+
 </LinearLayout>

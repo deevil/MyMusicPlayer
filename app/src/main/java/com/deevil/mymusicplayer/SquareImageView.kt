@@ -15,13 +15,6 @@ class SquareImageView : ImageView {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-//
-//        val width = measuredWidth
-//        setMeasuredDimension(width, width)
-    }
-
     override fun setImageDrawable(drawable: Drawable) {
         val radius = 0.05f
         val bitmap = (drawable as BitmapDrawable).bitmap
