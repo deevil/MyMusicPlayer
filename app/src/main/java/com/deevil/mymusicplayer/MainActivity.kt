@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
-    lateinit var mService: PlayerService
     private var showSelectDir = true
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
@@ -209,11 +208,13 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == DIRECTORY_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.data != null) {
             Log.i(TAG, "Result URI " + data.data)
 
-            val treeUri: Uri = data.data
+            val treeUri: Uri = data.data ?: return
+
+
             val lst = getAllAudioFromTree(treeUri)
             if (lst.size > 0) {
 
-                var concatenatedSource = ConcatenatingMediaSource()
+                val concatenatedSource = ConcatenatingMediaSource()
                 for (i in lst) {
                     concatenatedSource.addMediaSource(
                         ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
@@ -250,12 +251,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAllAudioFromTree(treeUri: Uri, inpParentDocumentId: String? = null): ArrayList<Uri> {
 
-        var parentDocumentId = inpParentDocumentId ?: DocumentsContract.getTreeDocumentId(treeUri)
+        val parentDocumentId = inpParentDocumentId ?: DocumentsContract.getTreeDocumentId(treeUri)
 
         val childrenUri = DocumentsContract.buildChildDocumentsUriUsingTree(treeUri, parentDocumentId)
         var children: Cursor? = null
 
-        var res: ArrayList<Uri> = ArrayList<Uri>()
+        val res: ArrayList<Uri> = ArrayList<Uri>()
 
         try {
             children = contentResolver.query(
@@ -279,8 +280,8 @@ class MainActivity : AppCompatActivity() {
 
 
         while (children.moveToNext()) {
-            val documentId = children.getString(children.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID))
-            val mimeType = children.getString(children.getColumnIndex(DocumentsContract.Document.COLUMN_MIME_TYPE))
+            val documentId = children.getString(children.getColumnIndex(Document.COLUMN_DOCUMENT_ID))
+            val mimeType = children.getString(children.getColumnIndex(Document.COLUMN_MIME_TYPE))
 
             if (Document.MIME_TYPE_DIR == mimeType) {
                 for (i in getAllAudioFromTree(treeUri, documentId)) {

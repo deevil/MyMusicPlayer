@@ -9,23 +9,14 @@
 
 
     <application
-            android:name=".MyApp"
             android:allowBackup="true"
+            android:fullBackupContent="true"
             android:icon="@drawable/ic_launcher_icon"
             android:label="@string/app_name"
             android:roundIcon="@drawable/ic_launcher_icon"
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <service
-                android:name=".MyIntentService"
-                android:exported="false">
-        </service>
-        <service
-                android:name=".PlayerService"
-                android:enabled="true"
-                android:exported="true">
-        </service>
 
         <activity
                 android:name=".MainActivity"
