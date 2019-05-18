@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity() {
             b.putParcelableArrayList("list", lst)
             val int = Intent(this, PlayerService::class.java)
             int.putExtras(b)
-            int.sta
+            //int.sta
             startService(int)
 
             //bindService(, serviceConnection, BIND_AUTO_CREATE)
