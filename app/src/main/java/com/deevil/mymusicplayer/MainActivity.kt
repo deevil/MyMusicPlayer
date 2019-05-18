@@ -3,7 +3,6 @@ package com.deevil.mymusicplayer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.player_control.*
 import android.Manifest
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +15,7 @@ import androidx.core.content.ContextCompat
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
+import android.os.PersistableBundle
 import android.view.View
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -29,10 +29,12 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.select.*
+
 
 
 class MainActivity : AppCompatActivity() {
+
+    val activity: AppCompatActivity = this
 
     private val PERMISSION_REQUEST_CODE = 9998
     private val DIRECTORY_REQUEST_CODE = 9999
@@ -41,24 +43,44 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var player: ExoPlayer
     lateinit var dataSourceFactory: DefaultDataSourceFactory
+    lateinit var mService: PlayerService
+    private var showSelectDir = true
 
+    override fun onRetainCustomNonConfigurationInstance(): Any? {
+        return player
+        //return super.onRetainCustomNonConfigurationInstance()
+    }
 
-    @SuppressLint("WrongConstant")
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(TAG, "onCreate")
         super.onCreate(savedInstanceState)
+
+        //if (savedInstanceState != null) return
         setContentView(R.layout.activity_main)
 
-        chengeView(true)
+        if (savedInstanceState != null){
+            showSelectDir = savedInstanceState.getBoolean("showSelectDir")
+            //player = lastNonConfigurationInstance as ExoPlayer
+        }
+        else {
+            player = ExoPlayerFactory.newSimpleInstance(this)
+            dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
+
+        }
+
+        changeView()
+
+
         // INIT PLAYER
-        player = ExoPlayerFactory.newSimpleInstance(this)
-        dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
         pcv.player = player
         pcv.controllerHideOnTouch = false
+        //player.blockingSendMessages()
+
+//        applicationContext.startForegroundService()
 
 
         // SWIPE
-        pcv.setOnTouchListener(object : SwipeListener(this){
+        pcv.setOnTouchListener(object : SwipeListener(this) {
 
             override fun onSwipeTop() {
                 Log.i(TAG, "onSwipeTop")
@@ -87,13 +109,13 @@ class MainActivity : AppCompatActivity() {
 
 
         // BUTTON CLICKS
-        btn_settings.setOnClickListener {selectDir()}
-        btn_add.setOnClickListener {selectDir()}
-        btn_select.setOnClickListener {selectDir()}
+        btn_settings.setOnClickListener { selectDir() }
+        btn_add.setOnClickListener { selectDir() }
+        btn_select.setOnClickListener { selectDir() }
 
         btn_repeat.setOnClickListener {
             btn_repeat.isSelected = !btn_repeat.isSelected
-            player.repeatMode = if (btn_repeat.isSelected) 2 else 0
+            player.repeatMode = if (btn_repeat.isSelected) Player.REPEAT_MODE_ALL else Player.REPEAT_MODE_OFF
         }
         btn_shuffle.setOnClickListener {
             btn_shuffle.isSelected = !btn_shuffle.isSelected
@@ -129,7 +151,27 @@ class MainActivity : AppCompatActivity() {
         })
 
 
+    }
 
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+
+
+
+        Log.i(TAG, "onRestoreInstanceState")
+
+        super.onRestoreInstanceState(savedInstanceState)
+        if (savedInstanceState != null) {
+            //persistentState = savedInstanceState.get
+        }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean("showSelectDir", showSelectDir)
+
+        Log.i(TAG, "onRestoreInstanceState")
+        super.onSaveInstanceState(outState)
     }
 
 
@@ -139,8 +181,16 @@ class MainActivity : AppCompatActivity() {
     private fun selectDir() {
 
         // Check permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), PERMISSION_REQUEST_CODE)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE
+            )
         } else {
             val i = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
 
@@ -165,11 +215,16 @@ class MainActivity : AppCompatActivity() {
 
                 var concatenatedSource = ConcatenatingMediaSource()
                 for (i in lst) {
-                    concatenatedSource.addMediaSource(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(i))
+                    concatenatedSource.addMediaSource(
+                        ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(
+                            i
+                        )
+                    )
                 }
 
                 player.prepare(concatenatedSource)
-                chengeView(false)
+                showSelectDir = false
+                changeView()
             } else {
                 Toast.makeText(this, "В выбранной директории нет аудио файлов", Toast.LENGTH_LONG).show()
             }
@@ -246,6 +301,7 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onStart")
         super.onStart()
     }
+
     override fun onStop() {
         Log.i(TAG, "onStop")
         super.onStop()
@@ -272,8 +328,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun chengeView(select_view : Boolean = true) {
-        if (select_view) {
+    fun changeView() {
+        if (showSelectDir) {
             pcv.visibility = View.GONE
             sel_lay.visibility = View.VISIBLE
         } else {
@@ -281,4 +337,6 @@ class MainActivity : AppCompatActivity() {
             sel_lay.visibility = View.GONE
         }
     }
+
+
 }
