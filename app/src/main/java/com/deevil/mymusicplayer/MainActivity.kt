@@ -31,7 +31,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
 
-
 class MainActivity : AppCompatActivity() {
 
     val activity: AppCompatActivity = this
@@ -57,11 +56,10 @@ class MainActivity : AppCompatActivity() {
         //if (savedInstanceState != null) return
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             showSelectDir = savedInstanceState.getBoolean("showSelectDir")
             //player = lastNonConfigurationInstance as ExoPlayer
-        }
-        else {
+        } else {
             player = ExoPlayerFactory.newSimpleInstance(this)
             dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"))
 
@@ -156,7 +154,6 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
 
 
-
         Log.i(TAG, "onRestoreInstanceState")
 
         super.onRestoreInstanceState(savedInstanceState)
@@ -212,6 +209,21 @@ class MainActivity : AppCompatActivity() {
 
 
             val lst = getAllAudioFromTree(treeUri)
+
+            val b = Bundle()
+            b.putParcelableArrayList("list", lst)
+            val int = Intent(this, PlayerService::class.java)
+            int.putExtras(b)
+            int.sta
+            startService(int)
+
+            //bindService(, serviceConnection, BIND_AUTO_CREATE)
+                //Intent(create.this, Pla.class)
+
+
+            //Toast.makeText(getBaseContext(), "Service Started", Toast.LENGTH_LONG).show();
+
+
             if (lst.size > 0) {
 
                 val concatenatedSource = ConcatenatingMediaSource()
