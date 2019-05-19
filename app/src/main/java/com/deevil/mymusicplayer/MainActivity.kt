@@ -18,6 +18,7 @@ import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
 import android.os.IBinder
+import android.os.PowerManager
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.exo_controller.*
@@ -320,6 +321,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+
+        val wakeLock: PowerManager.WakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "App::MyWakelockTag").apply {
+                    acquire(60*60*1000L /*60 minutes*/)
+                }
+            }
 
 
 
