@@ -17,7 +17,7 @@
             app:show_timeout="0"
             app:player_layout_id="@layout/player_view"
             app:show_shuffle_button="true"
-            app:controller_layout_id="@layout/player_control"
+            app:controller_layout_id="@layout/exo_controller"
             app:use_controller="true"
 
 
