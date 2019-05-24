@@ -12,7 +12,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
 
-class PlayerService : Service() {
+class PlayerServiceOld : Service() {
 
     private lateinit var player: SimpleExoPlayer
     private lateinit var dataSourceFactory: DefaultDataSourceFactory

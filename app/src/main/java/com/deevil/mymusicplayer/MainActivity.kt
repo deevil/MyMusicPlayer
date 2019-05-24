@@ -17,8 +17,13 @@ import androidx.core.content.ContextCompat
 import android.provider.DocumentsContract
 import android.provider.DocumentsContract.Document
 import android.database.Cursor
+import android.media.MediaDescription
 import android.os.IBinder
 import android.os.PowerManager
+import android.os.RemoteException
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.exo_controller.*
@@ -36,14 +41,21 @@ import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.player_view.*
 
 
+
 class MainActivity : AppCompatActivity() {
 
     private val PERMISSION_REQUEST_CODE = 9998
     private val DIRECTORY_REQUEST_CODE = 9999
-    private val TAG = "DBG"
+    private val TAG = "DBG-ACT"
 
     var player: ExoPlayer? = null
     private var showSelectDir = true
+
+
+    private lateinit var playerServiceBinder: AudioPlayerService.AudioPlayerServiceBinder
+    private lateinit var mediaController: MediaControllerCompat
+    private lateinit var callback: MediaControllerCompat.Callback
+    private lateinit var serviceConnection: ServiceConnection
 
     /**
      * On create
@@ -71,13 +83,52 @@ class MainActivity : AppCompatActivity() {
         btn_add.setOnClickListener { selectDir() }
         btn_select.setOnClickListener { selectDir() }
 
-        if (player == null) {
-            //val b = Bundle()
-            //b.putParcelableArrayList("list", lst)
-            val intent = Intent(this, PlayerService::class.java)
-            //intent.putExtras(b)
-            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+//        if (player == null) {
+//            //val b = Bundle()
+//            //b.putParcelableArrayList("list", lst)
+//            val intent = Intent(this, PlayerServiceOld::class.java)
+//            //intent.putExtras(b)
+//            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+//        }
+
+
+        callback = object : MediaControllerCompat.Callback() {
+            override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+                if (state == null)
+                    return
+                val playing = state.state == PlaybackStateCompat.STATE_PLAYING
+//                playButton.setEnabled(!playing)
+//                pauseButton.setEnabled(playing)
+//                stopButton.setEnabled(playing)
+            }
         }
+
+        serviceConnection = object : ServiceConnection {
+            override fun onServiceConnected(name: ComponentName, service: IBinder) {
+                playerServiceBinder = service as AudioPlayerService.AudioPlayerServiceBinder
+                try {
+                    mediaController =
+                        MediaControllerCompat(this@MainActivity, playerServiceBinder.mediaSessionToken)
+                    mediaController.registerCallback(callback)
+                    callback.onPlaybackStateChanged(mediaController.playbackState)
+                } catch (e: RemoteException) {
+                    //mediaController = null
+                }
+
+            }
+
+            override fun onServiceDisconnected(name: ComponentName) {
+                //playerServiceBinder = null
+                mediaController.unregisterCallback(callback)
+//                if (mediaController != null) {
+//                    mediaController.unregisterCallback(callback)
+//                    mediaController = null
+//                }
+            }
+        }
+
+        bindService(Intent(this, AudioPlayerService::class.java), serviceConnection, BIND_AUTO_CREATE)
+        //bindService(Intent(this, AudioPlayerService::class.java), serviceConnection, 0)
     }
 
     /**
@@ -134,13 +185,22 @@ class MainActivity : AppCompatActivity() {
 
             val lst = getAllAudioFromTree(treeUri)
 
-            if (lst.size > 0 && player != null) {
-                val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
-                val concatenatedSource = ConcatenatingMediaSource()
+            //if (lst.size > 0 && player != null) {
+            if (lst.size > 0) {
+                //val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)))
+                //val concatenatedSource = ConcatenatingMediaSource()
                 for (i in lst) {
-                    concatenatedSource.addMediaSource(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(i))
+                    val mediaDescription = MediaDescription.Builder().setMediaId(i.toString()).setMediaUri(i).build()
+                    mediaController.addQueueItem(MediaDescriptionCompat.fromMediaDescription(mediaDescription))
+                    //concatenatedSource.addMediaSource(ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(i))
                 }
-                player!!.prepare(concatenatedSource)
+
+                mediaController.transportControls.play()
+                //player!!.prepare(concatenatedSource)
+
+                    //                val intnt = Intent(this, AudioPlayerService::class.java)
+//                intnt.putExtra("lst", lst)
+//                startService(intnt)
 
                 showSelectDir = false
                 changeView()
@@ -245,7 +305,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            if (service is PlayerService.PlayerServiceBinder) {
+            if (service is PlayerServiceOld.PlayerServiceBinder) {
                 initPlayer(service.getPlayerInstance())
             }
         }
@@ -385,6 +445,14 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         Log.i(TAG, "onDestroy")
         super.onDestroy()
+
+        //super.onDestroy()
+        //playerServiceBinder = null
+        if (mediaController != null) {
+            mediaController.unregisterCallback(callback)
+            //mediaController = null
+        }
+        unbindService(serviceConnection)
     }
 
     override fun onPause() {

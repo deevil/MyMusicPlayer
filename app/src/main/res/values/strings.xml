@@ -12,5 +12,17 @@
     <string name="text_font_2">sans-serif</string>
     <string name="select_dir_2">Выберите папку с аудиозаписями</string>
     <string name="select_dir_1">Откуда играть музыку?</string>
+
     <string name="playback_channel_name">Playback</string>
+    <string name="notification_channel_name">Player controls</string>
+
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+
+
 </resources>
